@@ -56,7 +56,7 @@ kits.randomColor = function () {
 }
 
 // 随机16进制颜色
-kits.getColor=function() {
+kits.getColor = function () {
   //定义字符串变量colorValue存放可以构成十六进制颜色值的值
   var colorValue = "0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f";
   //以","为分隔符，将colorValue字符串分割为字符数组["0","1",...,"f"]
@@ -70,4 +70,95 @@ kits.getColor=function() {
     color += colorArray[Math.floor(Math.random() * 16)];
   }
   return color;
+}
+/**
+ * @description 封装好的移动端的单击事件
+ * @param { element } element 要注册单击事件的元素
+ * @param { function } fn 单击事件的处理程序
+ */
+function tap(element,fn){
+  let startTime
+  let startX,startY
+  element.addEventListener('touchstart',function(e){
+      if(e.touches.length !==1){
+          console.log('不是单击操作')
+          return
+      }
+      startTime=Date.now()
+      startX=e.touches[0].pageX
+      startY=e.touches[0].pageY
+  })
+  element.addEventListener('touchend',function(e){
+      let endTime=Date.now()
+      if(endTime-startTime>150){
+          console.log('按下时间过长')
+          return
+      }
+      let endX = e.changedTouches[0].pageX;
+      let endY = e.changedTouches[0].pageY;
+      if (Math.abs(endX - startX) > 50 || Math.abs(endY - startY) > 50) {
+          console.log('偏移过大');
+          return;
+        }
+        fn && fn();
+  })
+  }
+
+// 本地缓存封装
+// 将一个数组(arr)以指定的键(key)存储到localStorage里面
+kits.saveLocalDataArray = function (key, arr) {
+  
+  let a = []
+  arr.forEach(function (e) {
+    let id = kits.getId()
+    b = { content: e, id: id }
+    a.push(b)
+  })
+  localStorage.setItem(key, JSON.stringify(a))
+  return a
+}
+// 从localStorage里面根据指定的键获取一个数组
+kits.getLocalDataArray = function (key) {
+  var data = localStorage.getItem(key);
+  var arr = JSON.parse(data);
+  if (!arr) {
+    arr = [];
+  }
+  return arr;
+}
+// 向localStorage里面指定键(key)的数组数据追加一个数据对象（data）
+kits.appendDataIntoArray = function (key, data) {
+  let id = kits.getId()
+  let b = { content: data, id: id }
+  let arr = localStorage.getItem(key)
+  arr = JSON.parse(arr)
+  arr.push(b)
+  localStorage.setItem(key, JSON.stringify(arr))
+  return arr
+}
+// 根据对应的id从localStorage中指定键(key)的数组中删除一条数据参数
+kits.deleteLocalDataById = function (key, id) {
+  let arr = localStorage.getItem(key)
+  arr = JSON.parse(arr)
+  arr.forEach(function(e,i){
+    let m=e.id
+    if(m==id){
+      arr.splice(i,1)
+    }
+    localStorage.setItem('shuju',JSON.stringify(arr))
+  })
+ return arr
+}
+// 根据id修改localStorage里面的指定键(key)的数组数据参数
+kits.modifyLocalDataById=function(key,id,data){
+  let arr = localStorage.getItem(key)
+  arr = JSON.parse(arr)
+  arr.forEach(function(e){
+    let m=e.id
+    if(m==id){
+      e.content=data
+    }
+    localStorage.setItem('shuju',JSON.stringify(arr))
+  })
+  return arr
 }
