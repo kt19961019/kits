@@ -76,38 +76,38 @@ kits.getColor = function () {
  * @param { element } element 要注册单击事件的元素
  * @param { function } fn 单击事件的处理程序
  */
-function tap(element,fn){
+function tap(element, fn) {
   let startTime
-  let startX,startY
-  element.addEventListener('touchstart',function(e){
-      if(e.touches.length !==1){
-          console.log('不是单击操作')
-          return
-      }
-      startTime=Date.now()
-      startX=e.touches[0].pageX
-      startY=e.touches[0].pageY
+  let startX, startY
+  element.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) {
+      console.log('不是单击操作')
+      return
+    }
+    startTime = Date.now()
+    startX = e.touches[0].pageX
+    startY = e.touches[0].pageY
   })
-  element.addEventListener('touchend',function(e){
-      let endTime=Date.now()
-      if(endTime-startTime>150){
-          console.log('按下时间过长')
-          return
-      }
-      let endX = e.changedTouches[0].pageX;
-      let endY = e.changedTouches[0].pageY;
-      if (Math.abs(endX - startX) > 50 || Math.abs(endY - startY) > 50) {
-          console.log('偏移过大');
-          return;
-        }
-        fn && fn();
+  element.addEventListener('touchend', function (e) {
+    let endTime = Date.now()
+    if (endTime - startTime > 150) {
+      console.log('按下时间过长')
+      return
+    }
+    let endX = e.changedTouches[0].pageX;
+    let endY = e.changedTouches[0].pageY;
+    if (Math.abs(endX - startX) > 50 || Math.abs(endY - startY) > 50) {
+      console.log('偏移过大');
+      return;
+    }
+    fn && fn();
   })
-  }
+}
 
 // 本地缓存封装
 // 将一个数组(arr)以指定的键(key)存储到localStorage里面
 kits.saveLocalDataArray = function (key, arr) {
-  
+
   let a = []
   arr.forEach(function (e) {
     let id = kits.getId()
@@ -115,6 +115,7 @@ kits.saveLocalDataArray = function (key, arr) {
     a.push(b)
   })
   localStorage.setItem(key, JSON.stringify(a))
+  a = a || []
   return a
 }
 // 从localStorage里面根据指定的键获取一个数组
@@ -134,31 +135,34 @@ kits.appendDataIntoArray = function (key, data) {
   arr = JSON.parse(arr)
   arr.push(b)
   localStorage.setItem(key, JSON.stringify(arr))
+  arr = arr || []
   return arr
 }
 // 根据对应的id从localStorage中指定键(key)的数组中删除一条数据参数
 kits.deleteLocalDataById = function (key, id) {
   let arr = localStorage.getItem(key)
   arr = JSON.parse(arr)
-  arr.forEach(function(e,i){
-    let m=e.id
-    if(m==id){
-      arr.splice(i,1)
+  arr.forEach(function (e, i) {
+    let m = e.id
+    if (m == id) {
+      arr.splice(i, 1)
     }
-    localStorage.setItem('shuju',JSON.stringify(arr))
+    localStorage.setItem('shuju', JSON.stringify(arr))
   })
- return arr
+  arr = arr || []
+  return arr
 }
 // 根据id修改localStorage里面的指定键(key)的数组数据参数
-kits.modifyLocalDataById=function(key,id,data){
+kits.modifyLocalDataById = function (key, id, data) {
   let arr = localStorage.getItem(key)
   arr = JSON.parse(arr)
-  arr.forEach(function(e){
-    let m=e.id
-    if(m==id){
-      e.content=data
+  arr.forEach(function (e) {
+    let m = e.id
+    if (m == id) {
+      e.content = data
     }
-    localStorage.setItem('shuju',JSON.stringify(arr))
+    localStorage.setItem('shuju', JSON.stringify(arr))
   })
+  arr = arr || []
   return arr
 }
