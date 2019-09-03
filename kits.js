@@ -150,7 +150,6 @@ kits.deleteLocalDataById = function (key, id) {
     localStorage.setItem('shuju', JSON.stringify(arr))
   })
   arr = arr || []
-  return arr
 }
 // 根据id修改localStorage里面的指定键(key)的数组数据参数
 kits.modifyLocalDataById = function (key, id, data) {
@@ -159,7 +158,7 @@ kits.modifyLocalDataById = function (key, id, data) {
   arr.forEach(function (e) {
     let m = e.id
     if (m == id) {
-      e.content = data
+      arr[i] = data
     }
     localStorage.setItem('shuju', JSON.stringify(arr))
   })
