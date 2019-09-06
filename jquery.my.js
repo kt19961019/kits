@@ -151,8 +151,6 @@
         }
         return this
     }
-    // siblings/children/parent/parents
-
     // append方法
     // 一个参数默认给第一个元素后面追加新元素和内容
     // 两个参数为给指定索引的元素后面追加新元素和内容
@@ -191,26 +189,16 @@
     // siblings方法
     // 不传参获取元素所有同代元素集合的一个数组
     Init.prototype.siblings = function (expr) {
-        if (expr === undefined) {
-            let cc = this[0].parentNode.children
-            let n = Array.prototype.indexOf.call(cc, this[0])
-            let mm = []
-            for (let i = 0; i < cc.length; i++) {
-                if (i !== n) {
-                    mm.push(cc[i])
-                }
+        let cc = this[0].parentNode.children
+        let n = Array.prototype.indexOf.call(cc, this[0])
+        let mm = []
+        for (let i = 0; i < cc.length; i++) {
+            if (i !== n) {
+                mm.push(cc[i])
             }
-            return mm
-        } else {
+        }
+        if (expr) {
             let slc = document.querySelectorAll(expr)
-            let cc = this[0].parentNode.children
-            let n = Array.prototype.indexOf.call(cc, this[0])
-            let mm = []
-            for (let i = 0; i < cc.length; i++) {
-                if (i !== n) {
-                    mm.push(cc[i])
-                }
-            }
             let nn = []
             for (let i = 0; i < slc.length; i++) {
                 let index = mm.indexOf(slc[i])
@@ -220,6 +208,80 @@
             }
             return nn
         }
+        return mm
+    }
+    //children方法
+    // 不传参获取元素所有子元素集合的一个数组
+    //传参匹配指定选择器的子元素
+    Init.prototype.children = function (expr) {
+        let cc = this[0].children
+        console.log(cc)
+        let mm = []
+        for (let i = 0; i < cc.length; i++) {
+            mm.push(cc[i])
+        }
+        if (expr) {
+            let slc = document.querySelectorAll(expr)
+            let nn = []
+            for (let i = 0; i < slc.length; i++) {
+                let index = mm.indexOf(slc[i])
+                if (index != -1) {
+                    nn.push(mm[index])
+                }
+            }
+            return nn
+        }
+        return mm
+    }
+    // parent方法
+    // 不传参 匹配所有对象中所有元素的父元素
+    // 传参 匹配拥有指定选择器的父元素
+    Init.prototype.parent = function (expr) {
+        let par = []
+        this.each((i, e) => {
+            par.push(e.parentNode)
+        })
+        if (expr) {
+            let slc = document.querySelectorAll(expr)
+            let nn = []
+            for (let i = 0; i < slc.length; i++) {
+                let index = par.indexOf(slc[i])
+                if (index != -1) {
+                    nn.push(par[index])
+                }
+            }
+            return nn
+        }
+        return par
+    }
+    // parents方法
+    // 不传参 向上匹配元素的所有祖先元素
+    //  传参 向上匹配元素的指定选择器的祖先元素
+    Init.prototype.parents =function(expr){
+        let c=this
+        function bb (c){
+            if(c[0].parentNode){
+                aa.unshift(c[0].parentNode)
+                aa=bb(aa)
+              }
+            return aa
+        }
+        let p=[]
+        bb(c).forEach((e,i) => {
+            p.unshift(bb(c)[i])
+        })
+        if(expr){
+            let slc = document.querySelectorAll(expr)
+            let nn = []
+            for (let i = 0; i < slc.length; i++) {
+                let index = p.indexOf(slc[i])
+                if (index != -1) {
+                    nn.push(p[index])
+                }
+            }
+            return nn
+        }
+        return p
     }
     window.$ = $
 })()
