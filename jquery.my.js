@@ -261,7 +261,7 @@
         let c=this
         function bb (c){
             if(c[0].parentNode){
-                aa.unshift(c[0].parentNode)
+                aa.unshift(c[0].parentNlode)
                 aa=bb(aa)
               }
             return aa
